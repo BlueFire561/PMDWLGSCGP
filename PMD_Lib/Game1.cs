@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace PMD_Core
+namespace PMD_Lib
 {
     /// <summary>
     /// This is the main type for your game.
@@ -16,6 +16,8 @@ namespace PMD_Core
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            System.Console.WriteLine("hello");
+
         }
 
         /// <summary>

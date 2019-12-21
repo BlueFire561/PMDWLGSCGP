@@ -13,7 +13,7 @@ namespace PMD_Core
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new PMD_Lib.Game1())
                 game.Run();
         }
     }
