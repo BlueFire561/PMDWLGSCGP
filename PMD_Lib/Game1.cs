@@ -84,17 +84,13 @@ namespace PMD_Lib
         {
             GraphicsDevice.Clear(Color.SeaShell);
 
-            spriteBatch.Begin();
-            //spriteBatch.Draw(manTexture, new Vector2(200, 150), Color.White);
-            spriteBatch.End();
-
             int scale = 2;
             Matrix matrix = new Matrix(new Vector4(scale, 0, 0, 0),
                                        new Vector4(0, scale, 0, 0),
                                        new Vector4(0, 0, 1, 0),
                                        new Vector4(-camPos.X * scale, -camPos.Y * scale, 0, 1));
 
-            spriteBatch.Begin(transformMatrix: matrix);
+            spriteBatch.Begin(transformMatrix: matrix, samplerState: SamplerState.PointClamp);
       
             // Draw tilemap
             for (int x = 0; x < tileMap.GetLength(0); x++)
