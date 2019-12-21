@@ -4,110 +4,117 @@ using Microsoft.Xna.Framework.Input;
 
 namespace PMD_Lib
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
+    public enum TileIndexes
+    {
+        Grass,
+        Path,
+        Ice,
+    }
+
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private Texture2D manTexture;
-        private Vector2 manPos = new Vector2(200, 200);
-        private int manSpe = 20;
-
-
-
+        private Vector2 manPos = new Vector2(0, 0);
+        private int manSpe = 10;
+        private Texture2D grass;
+        private Texture2D path;
+        private Texture2D ice;
+        private int[,] tileMap = new int[200, 200];
+        private Vector2 camPos = new Vector2(0, 0);
+        
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             System.Console.WriteLine("hello");
-            
+
+            for (int x = 0; x < tileMap.GetLength(0); x++)
+                for (int y = 0; y < tileMap.GetLength(1); y++)
+                {
+                    tileMap[x, y] = (int)TileIndexes.Path;
+                }
+
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+            
             spriteBatch = new SpriteBatch(GraphicsDevice);
             manTexture = Content.Load<Texture2D>("man");
-             
-           
+            path = Content.Load<Texture2D>("path");
+            ice = Content.Load<Texture2D>("ice");
+            grass = Content.Load<Texture2D>("grass");
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
             Vector2 manVec = new Vector2();
-
             if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
                 manVec.Y--;
-            }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
                 manVec.X--;
-            }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
                 manVec.Y++;
-            }
             if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
                 manVec.X++;
-            }
             if (manVec != Vector2.Zero)
-            {
                 manVec.Normalize();
-            }
             manPos += manVec * manSpe;
 
-
-
-            base.Update(gameTime);
+            camPos = new Vector2(manPos.X - 400, manPos.Y - 200);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.SeaShell);
+
             spriteBatch.Begin();
+            //spriteBatch.Draw(manTexture, new Vector2(200, 150), Color.White);
+            spriteBatch.End();
+
+            Matrix matrix = new Matrix(new Vector4(1, 0, 0, 0),
+                                       new Vector4(0, 1, 0, 0),
+                                       new Vector4(0, 0, 1, 0),
+                                       new Vector4(-camPos.X, -camPos.Y, 0, 1));
+
+            spriteBatch.Begin(transformMatrix: matrix);
+      
+            // Draw tilemap
+            for (int x = 0; x < tileMap.GetLength(0); x++)
+                for (int y = 0; y < tileMap.GetLength(1); y++)
+                {
+                    if (tileMap[x, y] == (int)TileIndexes.Grass)
+                    {
+                        spriteBatch.Draw(grass, new Vector2(x * 16, y * 16), Color.White);
+                    }
+                    else if (tileMap[x, y] == (int)TileIndexes.Path)
+                    {
+                        spriteBatch.Draw(path, new Vector2(x * 16, y * 16), Color.White);
+                    }
+                    else if (tileMap[x, y] == (int)TileIndexes.Ice)
+                    {
+                        spriteBatch.Draw(ice, new Vector2(x * 16, y * 16), Color.White);
+                    }
+                }
+
             spriteBatch.Draw(manTexture, manPos, Color.White);
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
