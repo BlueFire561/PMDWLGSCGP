@@ -11,13 +11,18 @@ namespace PMD_Lib
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
+        private Texture2D manTexture;
+        private Vector2 manPos = new Vector2(200, 200);
+        private int manSpe = 20;
+
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             System.Console.WriteLine("hello");
-
+            
         }
 
         /// <summary>
@@ -41,8 +46,9 @@ namespace PMD_Lib
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            manTexture = Content.Load<Texture2D>("man");
+             
+           
         }
 
         /// <summary>
@@ -64,7 +70,31 @@ namespace PMD_Lib
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            Vector2 manVec = new Vector2();
+
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            {
+                manVec.Y--;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                manVec.X--;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                manVec.Y++;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                manVec.X++;
+            }
+            if (manVec != Vector2.Zero)
+            {
+                manVec.Normalize();
+            }
+            manPos += manVec * manSpe;
+
+
 
             base.Update(gameTime);
         }
@@ -75,10 +105,10 @@ namespace PMD_Lib
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            GraphicsDevice.Clear(Color.SeaShell);
+            spriteBatch.Begin();
+            spriteBatch.Draw(manTexture, manPos, Color.White);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
