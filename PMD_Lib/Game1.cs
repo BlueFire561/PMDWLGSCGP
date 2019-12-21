@@ -17,7 +17,7 @@ namespace PMD_Lib
         SpriteBatch spriteBatch;
         private Texture2D manTexture;
         private Vector2 manPos = new Vector2(0, 0);
-        private int manSpe = 10;
+        private int manSpe = 4;
         private Texture2D grass;
         private Texture2D path;
         private Texture2D ice;
@@ -77,7 +77,7 @@ namespace PMD_Lib
                 manVec.Normalize();
             manPos += manVec * manSpe;
 
-            camPos = new Vector2(manPos.X - 400, manPos.Y - 200);
+            camPos = new Vector2(manPos.X - 200, manPos.Y - 100);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -88,10 +88,11 @@ namespace PMD_Lib
             //spriteBatch.Draw(manTexture, new Vector2(200, 150), Color.White);
             spriteBatch.End();
 
-            Matrix matrix = new Matrix(new Vector4(1, 0, 0, 0),
-                                       new Vector4(0, 1, 0, 0),
+            int scale = 2;
+            Matrix matrix = new Matrix(new Vector4(scale, 0, 0, 0),
+                                       new Vector4(0, scale, 0, 0),
                                        new Vector4(0, 0, 1, 0),
-                                       new Vector4(-camPos.X, -camPos.Y, 0, 1));
+                                       new Vector4(-camPos.X * scale, -camPos.Y * scale, 0, 1));
 
             spriteBatch.Begin(transformMatrix: matrix);
       
